@@ -9,23 +9,8 @@ import { Jimp } from 'jimp';
 
 dotenv.config();
 
-const allowedOrigins = [process.env.FRONT_END_ADDRESS];
-
-const corsOptions = {
-    credentials: true,
-    exposedHeaders: ['Content-Disposition'],
-
-    origin: (origin, callback) => {
-        if (allowedOrigins.includes(origin) || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS!'));
-        }
-    },
-};
-
 const app = express();
-app.use(cors(corsOptions));
+app.use(cors());
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -45,6 +30,10 @@ const upload = multer({ storage });
 app.use(express.json());
 
 const port = 5000;
+
+app.get('/test', (req, res) => {
+    res.json({ message: 'Hello from CORS-enabled server!' });
+  });
 
 app.post('/api/remove-background', upload.single('image'), async (req, res) => {
     try {
