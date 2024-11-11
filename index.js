@@ -9,6 +9,24 @@ import { Jimp } from 'jimp';
 
 dotenv.config();
 
+const allowedOrigins = [process.env.FRONT_END_ADDRESS];
+
+const corsOptions = {
+    credentials: true,
+    exposedHeaders: ['Content-Disposition'],
+
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS!'));
+        }
+    },
+};
+
+const app = express();
+app.use(cors(corsOptions));
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const tempDir = 'uploads';
@@ -23,12 +41,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
-const app = express();
-app.use(cors({
-    origin: process.env.FRONT_END_ADDRESS,
-    exposedHeaders: ['Content-Disposition']
-}));
 
 app.use(express.json());
 
