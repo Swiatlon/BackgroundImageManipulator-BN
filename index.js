@@ -10,7 +10,11 @@ import { Jimp } from 'jimp';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow all common HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'], // Allow common headers
+}));
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
