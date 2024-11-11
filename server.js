@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
@@ -5,17 +6,17 @@ import fs from 'fs';
 import cors from 'cors';
 import { removeBackground } from '@imgly/background-removal-node';
 import { Jimp } from 'jimp';
-import { cssColorToHex } from "@jimp/utils";
 
+dotenv.config();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const app = express();
 app.use(cors({
-  exposedHeaders: ['Content-Disposition']  // Expose 'Content-Disposition' header to frontend
+    origin: process.env.FRONT_END_ADDRESS,
+    exposedHeaders: ['Content-Disposition']
 }));
 
-// Middleware to parse JSON body
 app.use(express.json());
 
 const port = 5000;
